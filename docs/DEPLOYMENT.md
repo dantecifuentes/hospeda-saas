@@ -12,7 +12,13 @@ Deploy the Vite frontend as a static HTTPS site and the Express API as a separat
 - Run `npm run check:deploy` with production environment variables before deployment. This checks configuration consistency; it does not deploy, provision infrastructure, verify secrets against providers or certify security.
 
 ## Database and operations
-Apply `db/migrations/001_initial.sql` through `005_notifications.sql` in order to an empty database, or only unapplied migrations on an existing database. Back up before migrating. Current project has no migration ledger or rollback automation; track applied versions operationally. Run `npm run qa:all` against a disposable staging database, not live guest records: QA registers tenants and writes test bookings. Configure logs, backups, TLS and monitoring before accepting real reservations.
+Back up before migrating. Run `npm run db:migrate` on an empty database, or follow the existing-database baseline procedure below. A migration ledger now records applied versions and checksums; automated rollbacks are not implemented. Run `npm run qa:all` against a disposable staging database, not live guest records: QA registers tenants and writes test bookings. Configure logs, backups, TLS and monitoring before accepting real reservations.
 
 ## Remaining release blockers
 Persistent object storage and photo URLs, production CORS and hosting verification, external guest delivery (email/SMS/WhatsApp), a background expiry worker, production-grade secret management and rate-limit store, provider sandbox checkout/webhook testing and settlement reconciliation. The guest status link is a bearer capability; it must be kept private.
+
+## Repeatable migrations and existing local databases
+`npm run db:migrate` creates `schema_migrations`, applies pending SQL files transactionally in filename order and records SHA-256 checksums. An advisory lock serializes concurrent migration processes. It refuses modified previously applied files. For a database already manually migrated through all five files, `npm run db:migrate -- --baseline-existing` checks that key database objects exist and records the five existing migrations; run it **once only** after confirming the existing schema. It is not a complete schema-diff tool and does not replace backups. Fresh databases must use plain `npm run db:migrate`.
+
+## Persistent photo volume
+Set `STORAGE_DIR` to an absolute path on a mounted persistent volume (e.g. `/mnt/hospeda-uploads`). The API serves `/uploads/*` from that directory and stores public URLs based on `PUBLIC_API_URL` rather than localhost. Back up the volume along with PostgreSQL. An ephemeral container directory will still lose photos on redeploy; no S3/R2 integration or automated volume provisioning is implemented yet. Avoid changing `PUBLIC_API_URL` without migrating already-stored photo URLs.
