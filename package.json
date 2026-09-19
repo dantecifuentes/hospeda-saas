@@ -12,7 +12,7 @@
     "dev:all": "concurrently -k \"npm:dev -- --port 53127\" \"npm:api\"",
     "db:init": "psql \"$DATABASE_URL\" -v ON_ERROR_STOP=1 -f db/schema.sql",
     "qa:api": "node tests/api.mjs",
-    "qa:all": "npm run build && npm run qa && npm run qa:management && npm run qa:api && npm run qa:phase3 && npm run qa:real && npm run qa:workflows && npm run qa:public && npm run qa:checkout && npm run qa:phase4-operations && npm run qa:notifications && npm run qa:guest-tracking && npm run qa:public-ui && npm run qa:quote-guardrails && npm run qa:deploy-check && npm run qa:migrations && npm run qa:staging-smoke && npm run qa:photo-persistence",
+    "qa:all": "npm run build && npm run qa && npm run qa:management && npm run qa:api && npm run qa:phase3 && npm run qa:real && npm run qa:workflows && npm run qa:public && npm run qa:checkout && npm run qa:phase4-operations && npm run qa:notifications && npm run qa:guest-tracking && npm run qa:public-ui && npm run qa:quote-guardrails && npm run qa:deploy-check && npm run qa:migrations && npm run qa:staging-smoke && npm run qa:photo-persistence && npm run qa:calendar",
     "qa:management": "node tests/management.mjs",
     "qa:phase3": "node tests/phase3.mjs",
     "qa:real": "node tests/real-panel.mjs",
@@ -36,7 +36,8 @@
     "local:restart": "pm2 restart hospeda-local --update-env",
     "local:status": "pm2 describe hospeda-local",
     "local:logs": "pm2 logs hospeda-local --lines 50",
-    "local:stop": "pm2 stop hospeda-local"
+    "local:stop": "pm2 stop hospeda-local",
+    "qa:calendar": "node tests/calendar.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",
