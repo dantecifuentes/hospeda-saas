@@ -12,13 +12,14 @@
     "dev:all": "concurrently -k \"npm:dev -- --port 53127\" \"npm:api\"",
     "db:init": "psql \"$DATABASE_URL\" -v ON_ERROR_STOP=1 -f db/schema.sql",
     "qa:api": "node tests/api.mjs",
-    "qa:all": "npm run build && npm run qa && npm run qa:management && npm run qa:api && npm run qa:phase3 && npm run qa:real && npm run qa:workflows && npm run qa:public && npm run qa:checkout",
+    "qa:all": "npm run build && npm run qa && npm run qa:management && npm run qa:api && npm run qa:phase3 && npm run qa:real && npm run qa:workflows && npm run qa:public && npm run qa:checkout && npm run qa:phase4-operations",
     "qa:management": "node tests/management.mjs",
     "qa:phase3": "node tests/phase3.mjs",
     "qa:real": "node tests/real-panel.mjs",
     "qa:workflows": "node tests/phase3-workflows.mjs",
     "qa:public": "node tests/public-booking.mjs",
-    "qa:checkout": "node tests/checkout.mjs"
+    "qa:checkout": "node tests/checkout.mjs",
+    "qa:phase4-operations": "node tests/phase4-operations.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",
