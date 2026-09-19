@@ -9,7 +9,8 @@
     "preview": "vite preview --host 0.0.0.0",
     "qa": "node tests/qa.mjs",
     "api": "node server/index.js",
-    "dev:all": "concurrently -k \"npm:dev -- --port 53127\" \"npm:api\""
+    "dev:all": "concurrently -k \"npm:dev -- --port 53127\" \"npm:api\"",
+    "db:init": "psql \"$DATABASE_URL\" -v ON_ERROR_STOP=1 -f db/schema.sql"
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",
