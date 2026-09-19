@@ -15,3 +15,6 @@ CREATE INDEX IF NOT EXISTS availability_blocks_calendar ON availability_blocks(o
 CREATE UNIQUE INDEX IF NOT EXISTS payments_provider_id_unique ON payments(provider,provider_payment_id) WHERE provider_payment_id IS NOT NULL AND provider <> 'manual';
 
 ALTER TABLE reservations ADD COLUMN IF NOT EXISTS checkout_token_hash text;
+
+CREATE TABLE IF NOT EXISTS notifications (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), organization_id uuid NOT NULL REFERENCES organizations(id) ON DELETE CASCADE, reservation_id uuid REFERENCES reservations(id) ON DELETE CASCADE, kind text NOT NULL CHECK (kind IN ('new_booking')), title text NOT NULL, message text NOT NULL, read_at timestamptz, created_at timestamptz NOT NULL DEFAULT now());
+CREATE INDEX IF NOT EXISTS notifications_org_recent ON notifications(organization_id,created_at DESC);
