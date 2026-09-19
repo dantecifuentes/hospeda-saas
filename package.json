@@ -30,7 +30,13 @@
     "qa:migrations": "node tests/migrations.mjs",
     "qa:staging-smoke": "node tests/staging-smoke.mjs",
     "qa:photo-persistence": "node tests/photo-persistence.mjs",
-    "check:local-docker": "node scripts/check-local-docker.mjs"
+    "check:local-docker": "node scripts/check-local-docker.mjs",
+    "local:build": "VITE_API_BASE_URL=http://localhost:53130/api npm run build && npm run db:migrate",
+    "local:start": "pm2 start ecosystem.config.cjs --update-env",
+    "local:restart": "pm2 restart hospeda-local --update-env",
+    "local:status": "pm2 describe hospeda-local",
+    "local:logs": "pm2 logs hospeda-local --lines 50",
+    "local:stop": "pm2 stop hospeda-local"
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",
@@ -43,6 +49,7 @@
     "jsonwebtoken": "^9.0.3",
     "multer": "^2.4.0",
     "pg": "^8.23.0",
+    "pm2": "^7.0.4",
     "react": "latest",
     "react-dom": "latest",
     "vite": "latest",
