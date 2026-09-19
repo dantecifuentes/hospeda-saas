@@ -58,3 +58,6 @@ The tenant booking page now shows an organization introduction, phone contact li
 
 ## Phase 4 release readiness: quote parity and public API URL
 Public quotes now enforce the same 1–90 night window, non-past arrival and optional guest capacity as the request endpoint. `VITE_API_BASE_URL` configures the guest booking/tracking and checkout-status API origin for deployments; localhost remains the development default. The authenticated dashboard still has its own local API configuration and needs deployment configuration before production. Payment gateway remains disabled without merchant credentials and sandbox verification. Migrations 003–005 must be applied in order on each deployment. Do not merge this phase into a production release until provider settlement, environment-specific origins, notification delivery and deployment checks are completed.
+
+## Phase 5: deployment preparation
+Authenticated account and owner dashboard now use the same `VITE_API_BASE_URL` as guest booking and tracking, eliminating their hardcoded API localhost origin. `scripts/check-deploy.mjs` verifies the required deployment variables, HTTPS public URLs, public API origin parity, CORS inclusion, secret length and that online payments remain disabled. See `docs/DEPLOYMENT.md` for a deployment checklist and known blockers. No remote infrastructure has been provisioned by this phase.
