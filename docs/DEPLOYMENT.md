@@ -32,3 +32,6 @@ The `qa:staging-smoke` test starts a production-mode Node process against the **
 
 ## Restart persistence smoke test
 `npm run qa:photo-persistence` creates a unique QA tenant and cabin in the local development PostgreSQL, uploads a 1-pixel PNG to a temporary configured photo directory, restarts the production-mode API, then verifies the persisted photo record and exact photo bytes. The test removes its temporary photo directory; the QA tenant and cabin remain in the local database. This verifies process-restart persistence, **not** a Docker container restart or an off-site backup. The test must not run against a production database.
+
+## Photo upload hardening
+Uploaded photo filenames now use a server-chosen extension based on the accepted MIME type, not the user-supplied filename. The first bytes are checked against JPEG/PNG/WebP signatures before database insertion; rejected uploads are deleted. This blocks trivial HTML-file uploads disguised as images, but is not full image decoding, malware scanning or image re-encoding. Existing files uploaded before this change should be audited before public release.

@@ -1,0 +1,5 @@
+import fs from'node:fs/promises';
+export const IMAGE_EXTENSIONS={'image/jpeg':'.jpg','image/png':'.png','image/webp':'.webp'};
+export function imageMatchesMime(buffer,mime){if(mime==='image/jpeg')return buffer.length>=3&&buffer[0]===255&&buffer[1]===216&&buffer[2]===255;if(mime==='image/png')return buffer.length>=8&&buffer.subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10]));if(mime==='image/webp')return buffer.length>=12&&buffer.toString('ascii',0,4)==='RIFF'&&buffer.toString('ascii',8,12)==='WEBP';return false}
+export async function validatePhotoFiles(files){for(const f of files){const handle=await fs.open(f.path,'r');let bytes;try{const buffer=Buffer.alloc(12);const result=await handle.read(buffer,0,12,0);bytes=buffer.subarray(0,result.bytesRead)}finally{await handle.close()}if(!imageMatchesMime(bytes,f.mimetype))throw Object.assign(new Error('Contenido de imagen inválido'),{status:400})}}
+export async function removePhotoFiles(files){await Promise.all((files||[]).map(f=>fs.unlink(f.path).catch(()=>{})))}
