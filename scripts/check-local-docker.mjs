@@ -1,0 +1,6 @@
+import{spawnSync}from'node:child_process';import fs from'node:fs';import os from'node:os';
+const run=(cmd,args,timeout=8000)=>spawnSync(cmd,args,{encoding:'utf8',timeout});
+const version=run('docker',['--version']);if(version.status!==0){console.error('BLOCKED Docker CLI not available');process.exit(1)}
+console.log('PASS Docker CLI available');const compose=run('docker',['compose','version']);if(compose.status!==0){console.error('BLOCKED Docker Compose unavailable');process.exit(1)}console.log('PASS Docker Compose available');
+const daemon=run('docker',['info','--format','{{.ServerVersion}}'],7000);if(daemon.status!==0){console.error('BLOCKED Docker engine unavailable. Open Docker Desktop and wait for engine startup; check Docker Desktop troubleshooting and free disk space.');process.exitCode=1}else console.log('PASS Docker engine available');
+const disk=run('df',['-Pk',os.homedir()]);if(disk.status===0){const line=disk.stdout.trim().split('\n').at(-1).trim().split(/\s+/);const available=Number(line[3]);if(Number.isFinite(available)){const gib=(available/1048576).toFixed(1);console.log('INFO available disk:',gib,'GiB');if(available<8*1048576)console.warn('WARN less than 8 GiB available; container image pulls and PostgreSQL volumes may fail. Do not delete Docker.raw manually.')}}

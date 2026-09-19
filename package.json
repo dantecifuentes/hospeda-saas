@@ -29,7 +29,8 @@
     "db:migrate": "node scripts/migrate.mjs",
     "qa:migrations": "node tests/migrations.mjs",
     "qa:staging-smoke": "node tests/staging-smoke.mjs",
-    "qa:photo-persistence": "node tests/photo-persistence.mjs"
+    "qa:photo-persistence": "node tests/photo-persistence.mjs",
+    "check:local-docker": "node scripts/check-local-docker.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",

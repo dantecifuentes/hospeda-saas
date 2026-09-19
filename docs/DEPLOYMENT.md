@@ -35,3 +35,6 @@ The `qa:staging-smoke` test starts a production-mode Node process against the **
 
 ## Photo upload hardening
 Uploaded photo filenames now use a server-chosen extension based on the accepted MIME type, not the user-supplied filename. The first bytes are checked against JPEG/PNG/WebP signatures before database insertion; rejected uploads are deleted. This blocks trivial HTML-file uploads disguised as images, but is not full image decoding, malware scanning or image re-encoding. Existing files uploaded before this change should be audited before public release.
+
+## Local Docker preflight (September 19, 2026)
+Run `npm run check:local-docker` before trying Compose. It verifies the Docker CLI, Compose plugin, engine connectivity and available disk space without deleting data. The Mac currently has the CLI and Compose, but the engine did not respond after attempts to open Docker Desktop; approximately 4.6 GiB of disk space was available. Docker Desktop has an existing `Docker.raw` virtual disk image; **do not delete it** to free space because it may contain existing containers, volumes and databases. Free space by reviewing personal files or Docker Desktop's own supported cleanup interface after confirming what is safe to remove. Docker image build and container persistence testing remain unverified.
