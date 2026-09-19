@@ -32,3 +32,6 @@ Registro propietario → empresa → JWT → creación de alojamiento → subida
 
 ## Fases siguientes
 Fase 2: consolidar la experiencia de administración y UX. Fase 3: migrar TODOS los módulos de demo a API y completar seguridad multiempresa. Fase 4: autogestión real. Fase 5: motor transaccional y pagos. Fase 6: MVP desplegado y endurecido. Fase 7: Marketplace real. Fase 8: integraciones avanzadas.
+
+## Phase 3 — authenticated management panel (in progress)
+The authenticated panel uses PostgreSQL for organizations, cabins, reservations, payments, tasks and availability blocks. Anonymous/demo routes still use demo browser state; they are **not** a production marketplace or payment integration. Apply `db/migrations/002_availability_blocks.sql` once to existing databases before deploying the phase-3 API. A fresh `db/schema.sql` includes the blocks table. Manual payment entries record administrative claims, not independently verified processor transactions. Cancelled reservations with collected payments require a separate refund workflow; cancellation does not automatically refund.
