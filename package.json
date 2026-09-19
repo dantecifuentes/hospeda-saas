@@ -10,7 +10,9 @@
     "qa": "node tests/qa.mjs",
     "api": "node server/index.js",
     "dev:all": "concurrently -k \"npm:dev -- --port 53127\" \"npm:api\"",
-    "db:init": "psql \"$DATABASE_URL\" -v ON_ERROR_STOP=1 -f db/schema.sql"
+    "db:init": "psql \"$DATABASE_URL\" -v ON_ERROR_STOP=1 -f db/schema.sql",
+    "qa:api": "node tests/api.mjs",
+    "qa:all": "npm run build && npm run qa && npm run qa:api"
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",
@@ -18,12 +20,15 @@
     "cors": "^2.8.6",
     "dotenv": "^18.0.1",
     "express": "^5.2.1",
+    "express-rate-limit": "^8.7.0",
+    "helmet": "^8.3.0",
     "jsonwebtoken": "^9.0.3",
     "multer": "^2.4.0",
     "pg": "^8.23.0",
     "react": "latest",
     "react-dom": "latest",
-    "vite": "latest"
+    "vite": "latest",
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "concurrently": "^10.0.5",

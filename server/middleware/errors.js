@@ -1,0 +1,2 @@
+export function notFound(req,res){res.status(404).json({error:'Ruta no encontrada'})}
+export function errorHandler(err,req,res,next){console.error('[api]',err.name,err.message);if(err.name==='MulterError')return res.status(400).json({error:'Archivo no válido o excede el límite permitido'});res.status(err.status||500).json({error:err.status&&err.status<500?err.message:'Error interno del servidor'})}
