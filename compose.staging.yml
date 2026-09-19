@@ -1,0 +1,42 @@
+# Local/staging only. Configure HTTPS and secrets externally before any public exposure.
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: hospeda_staging
+      POSTGRES_USER: hospeda
+      POSTGRES_PASSWORD: ${STAGING_DB_PASSWORD:?Set STAGING_DB_PASSWORD in a private env file}
+    volumes:
+      - staging_db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hospeda -d hospeda_staging"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+  app:
+    build:
+      context: .
+      args:
+        VITE_API_BASE_URL: ${STAGING_API_BASE_URL:?Set STAGING_API_BASE_URL}
+    environment:
+      NODE_ENV: production
+      API_PORT: 53128
+      DATABASE_URL: postgresql://hospeda:${STAGING_DB_PASSWORD}@db:5432/hospeda_staging
+      JWT_SECRET: ${STAGING_JWT_SECRET:?Set STAGING_JWT_SECRET}
+      CLIENT_ORIGINS: ${STAGING_WEB_ORIGIN:?Set STAGING_WEB_ORIGIN}
+      PUBLIC_API_URL: ${STAGING_API_BASE_URL}
+      PUBLIC_WEB_URL: ${STAGING_WEB_ORIGIN}
+      STORAGE_DIR: /mnt/hospeda-uploads
+      MP_PAYMENTS_ENABLED: 'false'
+    ports:
+      - '127.0.0.1:53129:53128'
+    volumes:
+      - staging_photos:/mnt/hospeda-uploads
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+volumes:
+  staging_db:
+  staging_photos:

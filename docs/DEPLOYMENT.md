@@ -22,3 +22,10 @@ Persistent object storage and photo URLs, production CORS and hosting verificati
 
 ## Persistent photo volume
 Set `STORAGE_DIR` to an absolute path on a mounted persistent volume (e.g. `/mnt/hospeda-uploads`). The API serves `/uploads/*` from that directory and stores public URLs based on `PUBLIC_API_URL` rather than localhost. Back up the volume along with PostgreSQL. An ephemeral container directory will still lose photos on redeploy; no S3/R2 integration or automated volume provisioning is implemented yet. Avoid changing `PUBLIC_API_URL` without migrating already-stored photo URLs.
+
+## Containerized staging (not publicly deployed)
+`Dockerfile` builds the Vite frontend with `VITE_API_BASE_URL` and packages it alongside the Express API; the production API serves `dist/` with a SPA fallback for deep links while keeping unknown `/api/*` routes as JSON 404. The container runs `db:migrate` before starting the API. `.dockerignore` excludes local secrets, database files, uploads and development dependencies.
+
+`compose.staging.yml` defines a PostgreSQL 17 container with a named database volume, a named photo volume and the application bound **only to 127.0.0.1:53129**. It requires a private env file based on `.env.staging.example` (replace every placeholder with independent random credentials and real HTTPS origins). To validate: `docker compose --env-file /path/to/private.env -f compose.staging.yml config --quiet`. To start when Docker Desktop is running: `docker compose --env-file /path/to/private.env -f compose.staging.yml up --build -d`. Put an HTTPS reverse proxy in front before public access. The sample is not a ready-made public deployment and does not configure TLS, DNS, off-site backups or monitoring.
+
+The `qa:staging-smoke` test starts a production-mode Node process against the **local development PostgreSQL** and verifies health, frontend deep links and API 404 behavior. It does not test Docker itself or a separate staging database. Docker Compose syntax was checked, but Docker daemon availability is required for an image build and actual container test.
