@@ -1,6 +1,6 @@
 import React,{useState}from'react';
 import{channelName}from'./calendarDates.js';
-import{financeSummary,cabinRows,sum,performanceRows}from'./financeMath.js';
+import{financeSummary,cabinRows,sum,performanceRows,monthlyTrend,channelRows}from'./financeMath.js';
 const money=n=>'$'+Number(n||0).toLocaleString('es-CL');
 export default function RealFinance({reservations,cabins,expenses,payments=[],action,call,busy}){
  const [month,setMonth]=useState(new Date().toLocaleDateString('en-CA',{timeZone:'America/Santiago'}).slice(0,7)),[draft,setDraft]=useState({date:new Date().toLocaleDateString('en-CA',{timeZone:'America/Santiago'}),cabinId:'',category:'Limpieza',description:'',amount:''}),[commission,setCommission]=useState({});
