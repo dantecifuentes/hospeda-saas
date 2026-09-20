@@ -1,0 +1,3 @@
+ALTER TABLE cabins ADD COLUMN IF NOT EXISTS min_nights integer NOT NULL DEFAULT 1 CHECK(min_nights BETWEEN 1 AND 90);
+CREATE TABLE IF NOT EXISTS cabin_rate_rules(id uuid PRIMARY KEY DEFAULT gen_random_uuid(),organization_id uuid NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,cabin_id uuid NOT NULL REFERENCES cabins(id) ON DELETE CASCADE,start_date date NOT NULL,end_date date NOT NULL,nightly_rate integer NOT NULL CHECK(nightly_rate>=0),label text NOT NULL DEFAULT '',created_at timestamptz NOT NULL DEFAULT now(),CHECK(end_date>start_date));
+CREATE INDEX IF NOT EXISTS cabin_rate_rules_lookup ON cabin_rate_rules(organization_id,cabin_id,start_date,end_date);

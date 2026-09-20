@@ -1,0 +1,2 @@
+export const nightsBetween=(start,end)=>Math.round((Date.parse(end+'T00:00:00Z')-Date.parse(start+'T00:00:00Z'))/86400000);
+export const priceStay=(base,start,end,rules)=>{let total=0;for(let i=0,n=nightsBetween(start,end);i<n;i++){const day=new Date(Date.parse(start+'T00:00:00Z')+i*86400000).toISOString().slice(0,10);const applicable=rules.filter(r=>String(r.start_date).slice(0,10)<=day&&String(r.end_date).slice(0,10)>day);total+=Number(applicable.length?applicable[applicable.length-1].nightly_rate:base)}return total};
